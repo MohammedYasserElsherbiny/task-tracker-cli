@@ -161,7 +161,7 @@ namespace task_cli
                     break;
                 }
             }
-           
+           // TODO: Make sure that a Done task cant be in progress
             if(taskIdx != -1)
             {
                 if(type == "mark-done")
@@ -191,6 +191,7 @@ namespace task_cli
             JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
             List<Task> tasks = jsonHandler.ReadTasks();
 
+            //TODO: Make sure to print the type of the progress not the number
             if (type == "")
             {
                 foreach (var task in tasks)
