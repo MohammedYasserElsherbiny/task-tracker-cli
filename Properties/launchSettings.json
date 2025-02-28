@@ -2,7 +2,7 @@
   "profiles": {
     "task-cli": {
       "commandName": "Project",
-      "commandLineArgs": "add \"work on project\""
+      "commandLineArgs": "update 1 \"work on project\""
     }
   }
 }

@@ -23,18 +23,21 @@ namespace task_cli
             if (opreation == "add")
             {
                 TaskOpreations opreations = new TaskOpreations();
-                opreations.
+                opreations.Add(args[1]);
             }
             else if (opreation == "update")
             {
-
+                TaskOpreations opreations = new TaskOpreations();
+                opreations.Update(Int32.Parse(args[1]), args[2]);
             }
             else if (opreation == "delete")
             {
-
+                TaskOpreations opreations = new TaskOpreations();
+                opreations.Delete(Int32.Parse(args[1]));
             }
             else if (opreation == "list")
             {
+                TaskOpreations opreations = new TaskOpreations();
                 if (args.Length > 1)
                 {
 
@@ -172,7 +175,45 @@ namespace task_cli
             {
                 Console.WriteLine("There is no task with this ID");
             }
+        }
 
+        public void list(List<Task> tasks , string type = "")
+        {
+            if(type == "")
+            {
+                foreach (var task in tasks)
+                {
+                    Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}\nTask progress: {task.progress}");
+                }
+            }
+            else if (type == "done")
+            {
+                foreach (var task in tasks)
+                {
+                    if(task.progress == 2)
+                        Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}");
+                }
+            }
+            else if(type == "todo")
+            {
+                foreach (var task in tasks)
+                {
+                    if (task.progress == 0)
+                        Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}");
+                }
+            }
+            else if(type == "in-progress")
+            {
+                foreach (var task in tasks)
+                {
+                    if (task.progress == 1)
+                        Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid list type");
+            }
         }
     }
 
