@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "task-cli": {
+      "commandName": "Project",
+      "commandLineArgs": "add \"work on project\""
+    }
+  }
+}

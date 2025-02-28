@@ -9,13 +9,49 @@ namespace task_cli
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+            if (args.Length < 1)
             {
                 Console.WriteLine("Please provide an input");
                 return;
             }
+            
+            //JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
+            //List<Task> tasks = jsonHandler.ReadTasks();
+            
+            string opreation = args[0].ToLower();
 
-            string opreation = args[0].ToLower();   
+            if (opreation == "add")
+            {
+                TaskOpreations opreations = new TaskOpreations();
+                opreations.
+            }
+            else if (opreation == "update")
+            {
+
+            }
+            else if (opreation == "delete")
+            {
+
+            }
+            else if (opreation == "list")
+            {
+                if (args.Length > 1)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            else if(opreation == "mark-in-progress" || opreation == "mark-done")
+            {
+
+            }
+            else
+            {
+                Console.WriteLine("please provide a valid opreation");
+            }
         }
     }
 
@@ -25,21 +61,37 @@ namespace task_cli
         public int Id {  get; set; }
         public int progress { get; set; }
 
-        public Task(string IncomingDescription)
+        public Task(string IncomingDescription, int IncomingId)
         {
             Description= IncomingDescription;
             progress = 0;
-
+            IncomingId = Id;
+            // 0 for not done, 1 for in progress, 2 for done
         }
-        // 0 for not done, 1 for in progress, 2 for done
-
     }
-
     public class TaskOpreations
     {
-        public void update(int Id, string description, List<Task> tasks)
+        public void Add(string description)
         {
-            int isExisted = 0;
+            JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
+            List<Task> tasks = jsonHandler.ReadTasks();
+
+            if (tasks.Count() == 0)
+                tasks.Append(new Task(description, 1));
+            else
+                tasks.Append(new Task(description, tasks[tasks.Count() - 1].Id + 1));
+
+            Console.WriteLine("A new task was added successfully");
+
+            jsonHandler.WriteTask(tasks);
+        }
+
+        public void Update(int Id, string description)
+        {
+            JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
+            List<Task> tasks = jsonHandler.ReadTasks();
+
+            int isExisted = -1;
             foreach (var task in tasks)
             {
                 if (task.Id == Id)
@@ -50,18 +102,20 @@ namespace task_cli
                 }
             }
 
-            if (isExisted > 0)
+            if (isExisted != -1)
             {
-                Console.WriteLine("Task was updated tasks.RemoveAt(taskIdx);");
+                jsonHandler.WriteTask(tasks);
+                Console.WriteLine("Task was updated successfully");
             }
-            else
-            { 
-                Console.WriteLine("There is no task with this ID"); 
-            }
+
+            Console.WriteLine("There is no task with this ID");
         }
 
-        public void delete(int Id, List<Task> tasks)
+        public void Delete(int Id)
         {
+            JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
+            List<Task> tasks = jsonHandler.ReadTasks();
+
             int taskIdx = -1;
             for (int i = 0; i < tasks.Count(); i++)
             {
@@ -72,10 +126,11 @@ namespace task_cli
                 }
             }
 
-            if(taskIdx > -1)
+            if(taskIdx != -1)
             {
                 tasks.RemoveAt(taskIdx);
-                Console.WriteLine("Task was deleted tasks.RemoveAt(taskIdx);"
+                Console.WriteLine("Task was deleted successfully");
+                jsonHandler.WriteTask(tasks);
             }
             else
             {
@@ -83,9 +138,41 @@ namespace task_cli
             }
         }
 
-        public void mark(int Id, string type , List<Task> tasks)
+        public void mark(int taskId, string type , List<Task> tasks)
         {
-            //TODO
+            type = type.ToLower();
+            int taskIdx = -1;
+            for (int i = 0; i < tasks.Count(); i++)
+            {
+                if (tasks[i].Id == i)
+                {
+                    taskIdx= i;
+                    break;
+                }
+            }
+           
+            if(taskId != -1)
+            {
+                if(type == "mark-done")
+                {
+                    tasks[taskIdx].progress = 2;
+                    Console.WriteLine("Task is now marked done");
+                }
+                else if(type == "mark-in-progress")
+                {
+                    tasks[taskIdx].progress = 1;
+                    Console.WriteLine("Task is now marked in prgress");
+                }
+                else
+                {
+                    Console.WriteLine("Unknown opreation");
+                }
+            }
+            else
+            {
+                Console.WriteLine("There is no task with this ID");
+            }
+
         }
     }
 
