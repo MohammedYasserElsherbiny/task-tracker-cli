@@ -19,8 +19,6 @@ namespace task_cli
             {
                 File.WriteAllText(_filePath, "[]");
             }
-            Console.WriteLine("JSON file path: " + Path.GetFullPath(fileName));
-
         }
 
         public List<Task> ReadTasks()

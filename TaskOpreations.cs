@@ -28,21 +28,13 @@ namespace task_cli
             JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
             List<Task> tasks = jsonHandler.ReadTasks();
 
-            int isExisted = -1;
-            foreach (var task in tasks)
-            {
-                if (task.Id == Id)
-                {
-                    isExisted++;
-                    task.Description = description;
-                    break;
-                }
-            }
+            Task? task = tasks.FirstOrDefault(t => t.Id == Id);
 
-            if (isExisted != -1)
+            if (task != null)
             {
-                jsonHandler.WriteTask(tasks);
+                task.Description = description;
                 Console.WriteLine("Task was updated successfully");
+                jsonHandler.WriteTask(tasks);
             }
             else
             {
@@ -55,19 +47,11 @@ namespace task_cli
             JsonFileHandler jsonHandler = new JsonFileHandler("tasks.json");
             List<Task> tasks = jsonHandler.ReadTasks();
 
-            int taskIdx = -1;
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                if (tasks[i].Id == Id)
-                {
-                    taskIdx = i;
-                    break;
-                }
-            }
+            Task? task = tasks.FirstOrDefault(t => t.Id == Id);
 
-            if (taskIdx != -1)
+            if (task != null)
             {
-                tasks.RemoveAt(taskIdx);
+                tasks.Remove(task);
                 Console.WriteLine("Task was deleted successfully");
                 jsonHandler.WriteTask(tasks);
             }
@@ -83,26 +67,19 @@ namespace task_cli
             List<Task> tasks = jsonHandler.ReadTasks();
 
             type = type.ToLower();
-            int taskIdx = -1;
-            for (int i = 0; i < tasks.Count(); i++)
-            {
-                if (tasks[i].Id == taskId)
-                {
-                    taskIdx = i;
-                    break;
-                }
-            }
+            Task? task = tasks.FirstOrDefault(t => t.Id == taskId);
             // TODO: Make sure that a Done task cant be in progress
-            if (taskIdx != -1)
+
+            if (task != null)
             {
                 if (type == "mark-done")
                 {
-                    tasks[taskIdx].progress = 2;
+                    task.progress = TaskProgress.Done;
                     Console.WriteLine("Task is now marked done");
                 }
                 else if (type == "mark-in-progress")
                 {
-                    tasks[taskIdx].progress = 1;
+                    task.progress = TaskProgress.InProgress;
                     Console.WriteLine("Task is now marked in prgress");
                 }
                 else
@@ -135,7 +112,7 @@ namespace task_cli
             {
                 foreach (var task in tasks)
                 {
-                    if (task.progress == 2)
+                    if (task.progress == TaskProgress.Done)
                     {
                         Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}");
                         Console.WriteLine("=============");
@@ -146,7 +123,7 @@ namespace task_cli
             {
                 foreach (var task in tasks)
                 {
-                    if (task.progress == 0)
+                    if (task.progress == TaskProgress.Todo)
                     {
                         Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}");
                         Console.WriteLine("=============");
@@ -157,7 +134,7 @@ namespace task_cli
             {
                 foreach (var task in tasks)
                 {
-                    if (task.progress == 1)
+                    if (task.progress == TaskProgress.InProgress)
                         Console.WriteLine($"Task ID: {task.Id}\nTask description: {task.Description}");
                 }
             }
