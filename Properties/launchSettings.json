@@ -1,8 +1,7 @@
 {
   "profiles": {
     "task-cli": {
-      "commandName": "Project",
-      "commandLineArgs": "update 1 \"work on projecttttt\""
+      "commandName": "Project"
     }
   }
 }
